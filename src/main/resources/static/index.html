@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Merchant KYC AI Assistant</title>
 <link rel="stylesheet" href="/css/chat.css">
 </head>
@@ -29,16 +29,16 @@
       </svg>
       View merchants
     </a>
-    
+
     <a class="new-chat-btn" href="/dashboard.html" style="text-decoration:none;">
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-    <rect x="3" y="3" width="7" height="9"/>
-    <rect x="14" y="3" width="7" height="5"/>
-    <rect x="14" y="12" width="7" height="9"/>
-    <rect x="3" y="16" width="7" height="5"/>
-  </svg>
-  Dashboard
-</a>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <rect x="3" y="3" width="7" height="9"/>
+        <rect x="14" y="3" width="7" height="5"/>
+        <rect x="14" y="12" width="7" height="9"/>
+        <rect x="3" y="16" width="7" height="5"/>
+      </svg>
+      Dashboard
+    </a>
 
     <div class="sidebar-section-label">Session</div>
     <div class="sidebar-footer">
@@ -109,6 +109,23 @@
   }
   sessionLbl.textContent = sessionId;
 
+  /* ---------- mobile: collapse sidebar by default + tap-outside to close ---------- */
+  const isMobile = () => window.matchMedia('(max-width: 720px)').matches;
+
+  if (isMobile()) {
+    sidebar.classList.add('collapsed');
+  }
+  window.addEventListener('resize', () => {
+    if (!isMobile()) sidebar.classList.remove('collapsed');
+  });
+  document.addEventListener('click', e => {
+    if (!isMobile()) return;
+    if (sidebar.classList.contains('collapsed')) return;
+    if (sidebar.contains(e.target)) return;
+    if (e.target.closest('.icon-btn')) return;
+    sidebar.classList.add('collapsed');
+  });
+
   /* ---------- helpers ---------- */
   function escapeHtml(s) {
     return String(s).replace(/[&<>"']/g, c => ({
@@ -168,7 +185,6 @@
   function attachActions(wrapEl, userText, aiText, toolsUsed) {
     const body = wrapEl.querySelector('.msg-body');
 
-    // tool badges
     if (toolsUsed && toolsUsed.length) {
       const tools = document.createElement('div');
       tools.className = 'tool-badges';
@@ -260,7 +276,6 @@
         if (done) break;
         buffer += decoder.decode(value, { stream: true });
 
-        // SSE frames separated by \n\n
         let idx;
         while ((idx = buffer.indexOf('\n\n')) >= 0) {
           const frame = buffer.slice(0, idx);
