@@ -25,7 +25,7 @@ spring:
   ai:
     openai:
       api-key: ${GROQ_API_KEY}
-      base-url: https://api.cerebras.ai/v1
+      base-url: https://api.cerebras.ai
       chat:
         options:
           model: gpt-oss-120b
@@ -51,4 +51,4 @@ kyc:
 
 agent:
   enabled: true
-  auto-verify-cron: "*/30 * * * * *"
+  auto-verify-cron: "0 */15 * * * *"
