@@ -25,10 +25,10 @@ spring:
   ai:
     openai:
       api-key: ${GROQ_API_KEY}
-      base-url: https://api.groq.com/openai
+      base-url: https://api.cerebras.ai/v1
       chat:
         options:
-          model: openai/gpt-oss-120b
+          model: llama3.1-8b
           temperature: 0.1
 
 management:
