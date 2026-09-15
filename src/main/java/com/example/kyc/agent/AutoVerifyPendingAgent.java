@@ -13,7 +13,7 @@ public class AutoVerifyPendingAgent {
         this.executor = executor;
     }
 
-    @Scheduled(cron = "*/30 * * * * *")  
+    @Scheduled(cron = "0 */15 * * * *")
     public void run() {
         executor.execute(
             "auto-verify",
