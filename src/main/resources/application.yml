@@ -28,7 +28,7 @@ spring:
       base-url: https://api.cerebras.ai/v1
       chat:
         options:
-          model: llama3.1-8b
+          model: gpt-oss-120b
           temperature: 0.1
 
 management:
