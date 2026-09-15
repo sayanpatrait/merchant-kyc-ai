@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Merchant KYC AI Assistant</title>
+<link rel="stylesheet" href="/css/chat.css">
+</head>
+<body>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="brand">
+        <span class="brand-logo">K</span>
+        <span>KYC Assistant</span>
+      </div>
+    </div>
+
+    <button class="new-chat-btn" onclick="newChat()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M12 5v14M5 12h14"/>
+      </svg>
+      New chat
+    </button>
+
+    <a class="new-chat-btn" href="/merchants.html" style="text-decoration:none;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M3 6h18M3 12h18M3 18h18"/>
+      </svg>
+      View merchants
+    </a>
+    
+    <a class="new-chat-btn" href="/dashboard.html" style="text-decoration:none;">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+    <rect x="3" y="3" width="7" height="9"/>
+    <rect x="14" y="3" width="7" height="5"/>
+    <rect x="14" y="12" width="7" height="9"/>
+    <rect x="3" y="16" width="7" height="5"/>
+  </svg>
+  Dashboard
+</a>
+
+    <div class="sidebar-section-label">Session</div>
+    <div class="sidebar-footer">
+      <div style="margin-bottom:6px;"><strong>ID</strong></div>
+      <div id="sessionLabel">—</div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="topbar">
+      <button class="icon-btn" onclick="toggleSidebar()" title="Toggle sidebar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M3 6h18M3 12h18M3 18h18"/>
+        </svg>
+      </button>
+      <div class="topbar-title">Merchant KYC AI Assistant</div>
+      <label class="stream-toggle" title="Stream responses token-by-token">
+        <input type="checkbox" id="streamToggle" checked>
+        <span>Stream</span>
+      </label>
+      <div class="topbar-model" id="modelLabel">gpt-oss-120b</div>
+    </div>
+
+    <div class="messages" id="messages">
+      <div class="messages-inner" id="messagesInner">
+        <div class="empty-state" id="emptyState">
+          <h2>How can I help with KYC today?</h2>
+          <p>Ask about verification status or trigger actions on merchants.</p>
+          <div class="suggestions">
+            <button class="suggestion" onclick="quickSend('Give me the merchant summary')">Merchant summary</button>
+            <button class="suggestion" onclick="quickSend('Give me the customer summary')">Customer summary</button>
+            <button class="suggestion" onclick="quickSend('Verify Krishna Agro Traders')">Verify a merchant by name</button>
+            <button class="suggestion" onclick="quickSend('How many customers are pending?')">Pending customers</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="composer">
+      <div class="composer-inner">
+        <textarea id="msg" rows="1" placeholder="Message KYC Assistant..." autocomplete="off"></textarea>
+        <button id="send" title="Send">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </button>
+      </div>
+      <div class="composer-hint">
+        Press <strong>Enter</strong> to send · <strong>Shift+Enter</strong> for new line · <strong>Ctrl+K</strong> to clear
+      </div>
+    </div>
+  </main>
+
+<script>
+  const messagesEl  = document.getElementById('messages');
+  const innerEl     = document.getElementById('messagesInner');
+  const emptyState  = document.getElementById('emptyState');
+  const input       = document.getElementById('msg');
+  const sendBtn     = document.getElementById('send');
+  const sessionLbl  = document.getElementById('sessionLabel');
+  const sidebar     = document.getElementById('sidebar');
+  const streamTgl   = document.getElementById('streamToggle');
+
+  let sessionId = sessionStorage.getItem('chatSessionId');
+  if (!sessionId) {
+    sessionId = 'sess-' + Math.random().toString(36).slice(2, 10);
+    sessionStorage.setItem('chatSessionId', sessionId);
+  }
+  sessionLbl.textContent = sessionId;
+
+  /* ---------- helpers ---------- */
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({
+      '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+    }[c]));
+  }
+  function renderMarkdown(text) {
+    let html = escapeHtml(text);
+    html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+    html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    return html;
+  }
+  function scrollBottom() { messagesEl.scrollTop = messagesEl.scrollHeight; }
+  function hideEmpty() { if (emptyState && emptyState.parentNode) emptyState.remove(); }
+
+  function addMessage(text, cls) {
+    hideEmpty();
+    const wrap = document.createElement('div');
+    wrap.className = 'msg ' + cls;
+    const avatar = document.createElement('div');
+    avatar.className = 'avatar';
+    avatar.textContent = cls === 'user' ? 'U' : 'AI';
+    const body = document.createElement('div');
+    body.className = 'msg-body';
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble';
+    bubble.innerHTML = renderMarkdown(text);
+    body.appendChild(bubble);
+    wrap.appendChild(avatar);
+    wrap.appendChild(body);
+    innerEl.appendChild(wrap);
+    scrollBottom();
+    return { wrap, bubble };
+  }
+
+  function addTyping() {
+    hideEmpty();
+    const wrap = document.createElement('div');
+    wrap.className = 'msg ai';
+    wrap.id = 'typingMsg';
+    wrap.innerHTML = `
+      <div class="avatar">AI</div>
+      <div class="msg-body"><div class="bubble">
+        <div class="typing"><span></span><span></span><span></span></div>
+      </div></div>`;
+    innerEl.appendChild(wrap);
+    scrollBottom();
+    return wrap;
+  }
+
+  function removeTyping() {
+    const t = document.getElementById('typingMsg');
+    if (t) t.remove();
+  }
+
+  /* ---------- feedback + copy bar for AI messages ---------- */
+  function attachActions(wrapEl, userText, aiText, toolsUsed) {
+    const body = wrapEl.querySelector('.msg-body');
+
+    // tool badges
+    if (toolsUsed && toolsUsed.length) {
+      const tools = document.createElement('div');
+      tools.className = 'tool-badges';
+      tools.innerHTML = toolsUsed.map(t =>
+        `<span class="tool-badge">🔧 ${escapeHtml(t)}</span>`
+      ).join('');
+      body.appendChild(tools);
+    }
+
+    const actions = document.createElement('div');
+    actions.className = 'msg-actions';
+    actions.innerHTML = `
+      <button class="act-btn act-copy" title="Copy">📋 Copy</button>
+      <button class="act-btn act-up"   title="Good response">👍</button>
+      <button class="act-btn act-down" title="Bad response">👎</button>
+    `;
+    body.appendChild(actions);
+
+    actions.querySelector('.act-copy').onclick = () => {
+      navigator.clipboard.writeText(aiText);
+      const b = actions.querySelector('.act-copy');
+      b.textContent = '✓ Copied';
+      setTimeout(() => b.textContent = '📋 Copy', 1400);
+    };
+    actions.querySelector('.act-up').onclick   = () => sendFeedback(userText, aiText, 1);
+    actions.querySelector('.act-down').onclick = () => sendFeedback(userText, aiText, -1);
+  }
+
+  async function sendFeedback(userText, aiText, rating) {
+    try {
+      await fetch('/api/feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId, userMessage: userText, aiResponse: aiText, rating })
+      });
+      console.log('[feedback] sent rating', rating);
+    } catch (e) {
+      console.warn('feedback failed', e);
+    }
+  }
+
+  /* ---------- non-streaming send ---------- */
+  async function sendBlocking(text) {
+    const wrap = addTyping();
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId, message: text })
+      });
+      const raw = await res.text();
+      removeTyping();
+      if (!res.ok) { addMessage('Error ' + res.status + ': ' + raw, 'ai'); return; }
+      const data = JSON.parse(raw);
+      const reply = data.response ?? '(no response)';
+      const tools = data.toolsUsed ?? [];
+      const { wrap: w, bubble } = addMessage(reply, 'ai');
+      attachActions(w, text, reply, tools);
+    } catch (e) {
+      removeTyping();
+      addMessage('Network error: ' + e.message, 'ai');
+    }
+  }
+
+  /* ---------- streaming send (SSE via fetch) ---------- */
+  async function sendStreaming(text) {
+    const wrap = addTyping();
+    const wrapEl = wrap;
+    let bubble = null;
+    let accumulated = '';
+
+    try {
+      const res = await fetch('/api/chat/stream', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId, message: text })
+      });
+
+      removeTyping();
+      const { wrap: w, bubble: b } = addMessage('', 'ai');
+      bubble = b;
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = '';
+
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+
+        // SSE frames separated by \n\n
+        let idx;
+        while ((idx = buffer.indexOf('\n\n')) >= 0) {
+          const frame = buffer.slice(0, idx);
+          buffer = buffer.slice(idx + 2);
+
+          for (const line of frame.split('\n')) {
+            if (line.startsWith('data:')) {
+              let chunk = line.slice(5);
+              if (chunk.startsWith(' ')) chunk = chunk.slice(1);
+              accumulated += chunk;
+              bubble.innerHTML = renderMarkdown(accumulated);
+              scrollBottom();
+            }
+          }
+        }
+      }
+      attachActions(w, text, accumulated, []);
+    } catch (e) {
+      removeTyping();
+      addMessage('Stream error: ' + e.message, 'ai');
+    }
+  }
+
+  /* ---------- send dispatcher ---------- */
+  async function send(text) {
+    text = (text ?? input.value).trim();
+    if (!text) return;
+    addMessage(text, 'user');
+    input.value = '';
+    input.style.height = 'auto';
+    sendBtn.disabled = true;
+
+    try {
+      if (streamTgl.checked) {
+        await sendStreaming(text);
+      } else {
+        await sendBlocking(text);
+      }
+    } finally {
+      sendBtn.disabled = false;
+      input.focus();
+    }
+  }
+
+  function quickSend(t) { input.value = t; send(); }
+  function newChat() { sessionStorage.removeItem('chatSessionId'); location.reload(); }
+  function toggleSidebar() { sidebar.classList.toggle('collapsed'); }
+
+  /* ---------- events ---------- */
+  sendBtn.addEventListener('click', () => send());
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); }
+  });
+  input.addEventListener('input', () => {
+    input.style.height = 'auto';
+    input.style.height = Math.min(input.scrollHeight, 200) + 'px';
+  });
+  document.addEventListener('keydown', e => {
+    if (e.ctrlKey && e.key === 'k') { e.preventDefault(); newChat(); }
+  });
+
+  input.focus();
+</script>
+</body>
+</html>

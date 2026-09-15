@@ -1,0 +1,52 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: merchant-kyc-ai
+
+  datasource:
+    url: jdbc:h2:file:./data/kycdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+
+  h2:
+    console:
+      enabled: true
+
+  ai:
+    openai:
+      api-key: ${GROQ_API_KEY}
+      base-url: https://api.groq.com/openai
+      chat:
+        options:
+          model: openai/gpt-oss-120b
+          temperature: 0.1
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+kyc:
+  providers:
+    pan:
+      base-url: ${PAN_KYC_BASE_URL:https://sandbox.example.com/pan}
+      api-key: ${PAN_KYC_API_KEY:}
+    aadhaar:
+      base-url: ${AADHAAR_KYC_BASE_URL:https://sandbox.example.com/aadhaar}
+      api-key: ${AADHAAR_KYC_API_KEY:}
+    gst:
+      base-url: ${GST_KYC_BASE_URL:https://sandbox.example.com/gst}
+      api-key: ${GST_KYC_API_KEY:}
+
+agent:
+  enabled: true
+  auto-verify-cron: "*/30 * * * * *"

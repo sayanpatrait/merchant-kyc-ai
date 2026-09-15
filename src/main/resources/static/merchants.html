@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Merchants — KYC</title>
+<link rel="stylesheet" href="/css/merchants.css">
+</head>
+<body>
+  <header class="topbar">
+    <a href="/" class="brand">← Back to Chat</a>
+    <h1>Merchants</h1>
+    <input id="search" placeholder="Search by name / PAN / GSTIN..." autocomplete="off">
+    <span id="count" class="count">—</span>
+  </header>
+
+  <main>
+    <table id="table">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>PAN</th>
+          <th>PAN</th>
+          <th>Aadhaar</th>
+          <th>GST</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="tbody">
+        <tr><td colspan="8" class="loading">Loading…</td></tr>
+      </tbody>
+    </table>
+  </main>
+
+<script>
+  const tbody  = document.getElementById('tbody');
+  const search = document.getElementById('search');
+  const countEl = document.getElementById('count');
+  let allRows = [];
+
+  function statusBadge(s) {
+    const cls = (s || '').toLowerCase();
+    return `<span class="badge badge-${cls}">${s}</span>`;
+  }
+
+  function render(rows) {
+    if (!rows.length) {
+      tbody.innerHTML = `<tr><td colspan="8" class="empty">No merchants match.</td></tr>`;
+      return;
+    }
+    tbody.innerHTML = rows.map(m => `
+      <tr data-id="${m.id}">
+        <td class="mono">${m.id}</td>
+        <td><strong>${escapeHtml(m.merchantName || '')}</strong></td>
+        <td>${escapeHtml(m.email || '')}</td>
+        <td class="mono">${escapeHtml(m.pan || '')}</td>
+        <td>${statusBadge(m.panStatus)}</td>
+        <td>${statusBadge(m.aadhaarStatus)}</td>
+        <td>${statusBadge(m.gstStatus)}</td>
+        <td>
+          <button class="btn-verify" onclick="verify(${m.id}, this)">Verify</button>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({
+      '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+    }[c]));
+  }
+
+  async function load() {
+    try {
+      const res = await fetch('/api/merchants');
+      allRows = await res.json();
+      countEl.textContent = allRows.length + ' total';
+      render(allRows);
+    } catch (e) {
+      tbody.innerHTML = `<tr><td colspan="8" class="empty">Error: ${e.message}</td></tr>`;
+    }
+  }
+
+  async function verify(id, btn) {
+    btn.disabled = true;
+    btn.textContent = '…';
+    try {
+      const res = await fetch(`/api/merchants/${id}/verify`, { method: 'POST' });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const updated = await res.json();
+      // update the row in allRows
+      allRows = allRows.map(m => m.id === updated.id ? updated : m);
+      render(filtered());
+    } catch (e) {
+      alert('Verify failed: ' + e.message);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Verify';
+    }
+  }
+
+  function filtered() {
+    const q = search.value.trim().toLowerCase();
+    if (!q) return allRows;
+    return allRows.filter(m =>
+      (m.merchantName || '').toLowerCase().includes(q) ||
+      (m.pan || '').toLowerCase().includes(q) ||
+      (m.gstin || '').toLowerCase().includes(q) ||
+      (m.email || '').toLowerCase().includes(q)
+    );
+  }
+
+  search.addEventListener('input', () => render(filtered()));
+  load();
+</script>
+</body>
+</html>
