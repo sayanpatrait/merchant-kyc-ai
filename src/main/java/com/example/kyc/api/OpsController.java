@@ -32,7 +32,7 @@ public class OpsController {
     @GetMapping(value = "/stats/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<ServerSentEvent<Map<String, Object>>> statsStream() {
         return Flux.interval(Duration.ZERO, Duration.ofSeconds(5))
-                .onBackpressureDrop()                 // <- key fix
+                .onBackpressureDrop()
                 .map(tick -> ServerSentEvent.<Map<String, Object>>builder()
                         .event("stats")
                         .data(stats.snapshot())
@@ -43,7 +43,7 @@ public class OpsController {
     @GetMapping(value = "/events/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<ServerSentEvent<Map<String, Object>>> eventsStream() {
         return events.stream()
-                .onBackpressureDrop()                 // <- defensive, in case upstream is a hot publisher
+                .onBackpressureDrop()
                 .map(payload -> ServerSentEvent.<Map<String, Object>>builder()
                         .event("event")
                         .data(payload)
