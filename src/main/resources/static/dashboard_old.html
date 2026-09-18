@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>KYC Operations · Dashboard</title>
+<link rel="stylesheet" href="/css/dashboard.css?v=8">
+</head>
+<body>
+
+<header class="header">
+  <div class="brand">
+    <div class="brand-logo">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+        <path d="M2 17l10 5 10-5"/>
+        <path d="M2 12l10 5 10-5"/>
+      </svg>
+    </div>
+    <div class="brand-text">
+      <div class="brand-title">KYC Operations</div>
+      <div class="brand-sub">Real-time dashboard</div>
+    </div>
+  </div>
+  <nav class="nav">
+    <a href="/" class="nav-btn">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+      </svg>
+      Chat
+    </a>
+    <a href="/merchants.html" class="nav-btn">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 21h18M5 21V7l7-4 7 4v14M9 9h.01M9 13h.01M9 17h.01M15 9h.01M15 13h.01M15 17h.01"/>
+      </svg>
+      Merchants
+    </a>
+    <a href="/customers.html" class="nav-btn">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+        <circle cx="12" cy="7" r="4"/>
+      </svg>
+      Customers
+    </a>
+    <a href="/api/reports/failed-pending.xlsx" class="nav-btn nav-btn-primary">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+        <polyline points="7 10 12 15 17 10"/>
+        <line x1="12" y1="15" x2="12" y2="3"/>
+      </svg>
+      Export
+    </a>
+    <span class="live">
+      <span class="live-dot"></span>
+      LIVE
+    </span>
+  </nav>
+</header>
+
+<main>
+
+  <!-- ═══ STAT CARDS · 2 columns ═══ -->
+  <section class="stats">
+
+    <div class="stat-card stat-merchant">
+      <div class="stat-header">
+        <div class="stat-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 21h18M5 21V7l7-4 7 4v14M9 9h.01M9 13h.01M9 17h.01M15 9h.01M15 13h.01M15 17h.01"/>
+          </svg>
+        </div>
+        <div class="stat-label">Merchants</div>
+        <div class="stat-value" id="m-total">—</div>
+      </div>
+      <div class="stat-breakdown">
+        <div class="bd-item">
+          <span class="bd-indicator bd-verified"></span>
+          <span class="bd-name">Verified</span>
+          <span class="bd-num" id="m-verified">0</span>
+        </div>
+        <div class="bd-item">
+          <span class="bd-indicator bd-pending"></span>
+          <span class="bd-name">Pending</span>
+          <span class="bd-num" id="m-pending">0</span>
+        </div>
+        <div class="bd-item">
+          <span class="bd-indicator bd-failed"></span>
+          <span class="bd-name">Failed</span>
+          <span class="bd-num" id="m-failed">0</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="stat-card stat-customer">
+      <div class="stat-header">
+        <div class="stat-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+        </div>
+        <div class="stat-label">Customers</div>
+        <div class="stat-value" id="c-total">—</div>
+      </div>
+      <div class="stat-breakdown">
+        <div class="bd-item">
+          <span class="bd-indicator bd-verified"></span>
+          <span class="bd-name">Verified</span>
+          <span class="bd-num" id="c-verified">0</span>
+        </div>
+        <div class="bd-item">
+          <span class="bd-indicator bd-pending"></span>
+          <span class="bd-name">Pending</span>
+          <span class="bd-num" id="c-pending">0</span>
+        </div>
+        <div class="bd-item">
+          <span class="bd-indicator bd-failed"></span>
+          <span class="bd-name">Failed</span>
+          <span class="bd-num" id="c-failed">0</span>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ═══ ROW 2 · TICKER + GAUGE ═══ -->
+  <section class="row-2">
+
+    <div class="panel panel-ticker">
+      <div class="panel-header">
+        <div class="panel-title">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+          </svg>
+          Recent Verifications
+        </div>
+        <span class="panel-badge" id="ticker-count">0</span>
+      </div>
+
+      <div class="ticker-header">
+        <span>Status</span>
+        <span>Entity</span>
+        <span>Age</span>
+      </div>
+
+      <div class="ticker" id="ticker"></div>
+    </div>
+
+    <div class="panel panel-gauge">
+      <div class="panel-header">
+        <div class="panel-title">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 6v6l4 2"/>
+          </svg>
+          Success Rate
+        </div>
+      </div>
+
+      <div class="gauge-wrap">
+        <canvas id="gaugeChart" width="220" height="220"></canvas>
+        <div class="gauge-center">
+          <div class="gauge-value" id="gaugeValue">—</div>
+          <div class="gauge-label">of checks passed</div>
+        </div>
+      </div>
+
+      <div class="gauge-footer">
+        <div class="gauge-stat">
+          <span class="gauge-stat-num gauge-num-ok" id="g-verified">0</span>
+          <span class="gauge-stat-label">passed</span>
+        </div>
+        <div class="gauge-divider"></div>
+        <div class="gauge-stat">
+          <span class="gauge-stat-num gauge-num-fail" id="g-failed">0</span>
+          <span class="gauge-stat-label">failed</span>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ═══ ROW 3 · FAILURE REASONS ═══ -->
+  <section class="panel panel-failures">
+    <div class="panel-header">
+      <div class="panel-title">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+          <line x1="12" y1="9" x2="12" y2="13"/>
+          <line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+        Failure Reasons
+      </div>
+    </div>
+    <div class="failure-list" id="failureList"></div>
+  </section>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+  function animateNumber(el, target) {
+    if (!el) return;
+    const start = parseInt(el.textContent.replace(/\D/g, '')) || 0;
+    const duration = 500;
+    const t0 = performance.now();
+    function step(t) {
+      const p = Math.min(1, (t - t0) / duration);
+      const eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(start + (target - start) * eased).toLocaleString();
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  function setText(id, value) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = typeof value === 'number' ? value.toLocaleString() : value;
+  }
+
+  function timeAgo(iso) {
+    if (!iso) return '—';
+    const diff = Math.max(0, (Date.now() - new Date(iso).getTime()) / 1000);
+    if (diff < 60) return Math.floor(diff) + 's';
+    if (diff < 3600) return Math.floor(diff / 60) + 'm';
+    if (diff < 86400) return Math.floor(diff / 3600) + 'h';
+    return Math.floor(diff / 86400) + 'd';
+  }
+
+  function escapeHtml(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({
+      '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+    }[c]));
+  }
+
+  function statusIcon(status) {
+    if (status === 'VERIFIED') return '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+    if (status === 'FAILED')   return '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+    return '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>';
+  }
+
+  function entityIcon(type) {
+    if (type === 'MERCHANT') return '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V7l7-4 7 4v14M9 9h.01M9 13h.01M9 17h.01M15 9h.01M15 13h.01M15 17h.01"/></svg>';
+    return '<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
+  }
+
+  /* ─────────── TICKER ─────────── */
+  async function loadTicker() {
+    try {
+      const [merchants, customers] = await Promise.all([
+        fetch('/api/merchants').then(r => r.json()),
+        fetch('/api/customers').then(r => r.json())
+      ]);
+
+      const items = [];
+
+      for (const m of merchants) {
+        const status = (m.panStatus === 'FAILED' || m.aadhaarStatus === 'FAILED' || m.gstStatus === 'FAILED')
+          ? 'FAILED'
+          : (m.panStatus === 'VERIFIED' && m.aadhaarStatus === 'VERIFIED' && m.gstStatus === 'VERIFIED')
+            ? 'VERIFIED' : 'PENDING';
+        items.push({ type: 'MERCHANT', name: m.merchantName, status, time: m.createdAt });
+      }
+      for (const c of customers) {
+        items.push({ type: 'CUSTOMER', name: c.fullName, status: c.kycStatus, time: c.createdAt });
+      }
+
+      items.sort((a, b) => new Date(b.time) - new Date(a.time));
+
+      const top = items.slice(0, 12);
+      const ticker = document.getElementById('ticker');
+
+      ticker.innerHTML = top.map(i => {
+        const cls = 'ticker-row ticker-' + i.status.toLowerCase();
+        return `
+          <div class="${cls}">
+            <span class="ticker-status">${statusIcon(i.status)}</span>
+            <span class="ticker-entity">
+              <span class="ticker-type-icon">${entityIcon(i.type)}</span>
+              <span class="ticker-name-text">${escapeHtml(i.name)}</span>
+            </span>
+            <span class="ticker-time">${timeAgo(i.time)}</span>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('ticker-count').textContent = items.length.toLocaleString();
+    } catch (e) {
+      console.warn('ticker load failed', e);
+    }
+  }
+
+  /* ─────────── GAUGE ─────────── */
+  let gauge;
+  function renderGauge(rate, verified, failed) {
+    const ctx = document.getElementById('gaugeChart').getContext('2d');
+
+    if (gauge) gauge.destroy();
+
+    gauge = new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Verified', 'Failed'],
+        datasets: [{
+          data: [verified, failed || 0.0001],
+          backgroundColor: ['#0d9488', '#e11d48'],
+          borderWidth: 0,
+          cutout: '78%',
+          circumference: 270,
+          rotation: 225
+        }]
+      },
+      options: {
+        responsive: false,
+        plugins: { legend: { display: false }, tooltip: { enabled: false } },
+        animation: { animateRotate: true, duration: 800 }
+      }
+    });
+
+    const el = document.getElementById('gaugeValue');
+    const start = parseFloat(el.textContent) || 0;
+    const duration = 800;
+    const t0 = performance.now();
+    function step(t) {
+      const p = Math.min(1, (t - t0) / duration);
+      const eased = 1 - Math.pow(1 - p, 3);
+      const val = start + (rate - start) * eased;
+      el.textContent = val.toFixed(1) + '%';
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+
+    setText('g-verified', verified);
+    setText('g-failed', failed);
+  }
+
+  /* ─────────── FAILURE REASONS ─────────── */
+  const REASON_COLORS = {
+    'PROVIDER_TIMEOUT': '#e11d48',
+    'INVALID_FORMAT':   '#ea580c',
+    'NAME_MISMATCH':    '#d97706',
+    'NOT_FOUND':        '#65a30d',
+    'RATE_LIMITED':     '#0891b2',
+    'UNKNOWN':          '#64748b'
+  };
+
+  function reasonLabel(r) {
+    return r.replace(/_/g, ' ');
+  }
+
+  async function loadFailures() {
+    try {
+      const res = await fetch('/api/analytics/failure-reasons');
+      const data = await res.json();
+      const list = document.getElementById('failureList');
+
+      if (!data.reasons || data.reasons.length === 0) {
+        list.innerHTML = `
+          <div class="failure-empty">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#0d9488" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+              <polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+            <div>No failures recorded</div>
+            <div class="failure-empty-sub">All checks passed successfully</div>
+          </div>`;
+        return;
+      }
+
+      list.innerHTML = data.reasons.map(r => {
+        const color = REASON_COLORS[r.reason] || '#64748b';
+        const barWidth = Math.max(2, Math.round(r.percentage));
+        return `
+          <div class="failure-row">
+            <span class="failure-dot" style="background:${color}"></span>
+            <span class="failure-label">${reasonLabel(r.reason)}</span>
+            <span class="failure-bar-wrap">
+              <span class="failure-bar" style="width:${barWidth}%;background:${color}"></span>
+            </span>
+            <span class="failure-count">${r.count}</span>
+            <span class="failure-pct">${r.percentage.toFixed(1)}%</span>
+          </div>
+        `;
+      }).join('');
+    } catch (e) {
+      console.warn('failure reasons load failed', e);
+    }
+  }
+
+  /* ─────────── SSE · stats ─────────── */
+  const stats = new EventSource('/api/ops/stats/stream');
+  stats.addEventListener('stats', ev => {
+    const s = JSON.parse(ev.data);
+
+    animateNumber(document.getElementById('m-total'), s.merchants.total);
+    setText('m-verified', s.merchants.verified);
+    setText('m-pending',  s.merchants.pending);
+    setText('m-failed',   s.merchants.failed);
+
+    animateNumber(document.getElementById('c-total'), s.customers.total);
+    setText('c-verified', s.customers.verified);
+    setText('c-pending',  s.customers.pending);
+    setText('c-failed',   s.customers.failed);
+
+    fetch('/api/analytics/success-rate')
+      .then(r => r.json())
+      .then(rate => renderGauge(rate.rate, rate.verified, rate.failed))
+      .catch(() => {});
+  });
+
+  /* ─────────── Init ─────────── */
+  loadTicker();
+  loadFailures();
+  fetch('/api/analytics/success-rate')
+    .then(r => r.json())
+    .then(rate => renderGauge(rate.rate, rate.verified, rate.failed));
+
+  setInterval(loadTicker, 5000);
+  setInterval(loadFailures, 15000);
+
+  stats.onerror = () => console.warn('stats stream error');
+</script>
+</body>
+</html>

@@ -1,0 +1,159 @@
+<mxfile host="app.diagrams.net" modified="2026-09-17T00:00:00.000Z" agent="Claude" version="22.0.0">
+  <diagram id="workflow-hero" name="KYC Workflow">
+    <mxGraphModel dx="1600" dy="900" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2400" pageHeight="900" math="0" shadow="0" background="#0f1424">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- ================= TITLE ================= -->
+        <mxCell id="title" value="KYC Verification Flow" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=42;fontStyle=1;fontColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="600" y="40" width="1200" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="subtitle" value="From upload to verified — in under 2 seconds" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;fontColor=#9ca3af;" vertex="1" parent="1">
+          <mxGeometry x="600" y="100" width="1200" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- ================= STEP 1: UPLOAD ================= -->
+        <mxCell id="s1Circle" value="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#14b8a6;strokeColor=none;fontSize=28;fontColor=#ffffff;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="150" y="250" width="70" height="70" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="s1Icon" value="📤" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=80;" vertex="1" parent="1">
+          <mxGeometry x="100" y="360" width="180" height="100" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="s1Title" value="Document&#xa;Upload" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;fontStyle=1;fontColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="80" y="480" width="220" height="70" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="s1Desc" value="Mobile / web client&#xa;submits PAN, GST, Aadhaar" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontColor=#9ca3af;" vertex="1" parent="1">
+          <mxGeometry x="60" y="560" width="260" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- Arrow 1→2 -->
+        <mxCell id="a1" value="" style="endArrow=classic;html=1;strokeColor=#4f5bd5;strokeWidth=6;endSize=12;rounded=0;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="400" y="450" as="sourcePoint"/>
+            <mxPoint x="520" y="450" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ================= STEP 2: PERSIST ================= -->
+        <mxCell id="s2Circle" value="2" style="ellipse;whiteSpace=wrap;html=1;fillColor=#10b981;strokeColor=none;fontSize=28;fontColor=#ffffff;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="600" y="250" width="70" height="70" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="s2Icon" value="💾" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=80;" vertex="1" parent="1">
+          <mxGeometry x="550" y="360" width="180" height="100" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="s2Title" value="Save to&#xa;Database" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;fontStyle=1;fontColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="530" y="480" width="220" height="70" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="s2Desc" value="Row created with&#xa;status = PENDING" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontColor=#9ca3af;" vertex="1" parent="1">
+          <mxGeometry x="510" y="560" width="260" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- Arrow 2→3 -->
+        <mxCell id="a2" value="" style="endArrow=classic;html=1;strokeColor=#f59e0b;strokeWidth=6;endSize=12;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="850" y="450" as="sourcePoint"/>
+            <mxPoint x="970" y="450" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ================= STEP 3: KAFKA ================= -->
+        <mxCell id="s3Circle" value="3" style="ellipse;whiteSpace=wrap;html=1;fillColor=#f59e0b;strokeColor=none;fontSize=28;fontColor=#ffffff;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1050" y="250" width="70" height="70" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="s3Icon" value="📨" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=80;" vertex="1" parent="1">
+          <mxGeometry x="1000" y="360" width="180" height="100" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="s3Title" value="Publish&#xa;Event" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;fontStyle=1;fontColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="980" y="480" width="220" height="70" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="s3Desc" value="Kafka topic fires&#xa;a verification event" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontColor=#9ca3af;" vertex="1" parent="1">
+          <mxGeometry x="960" y="560" width="260" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- Arrow 3→4 -->
+        <mxCell id="a3" value="" style="endArrow=classic;html=1;strokeColor=#8b5cf6;strokeWidth=6;endSize=12;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1300" y="450" as="sourcePoint"/>
+            <mxPoint x="1420" y="450" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ================= STEP 4: VERIFY ================= -->
+        <mxCell id="s4Circle" value="4" style="ellipse;whiteSpace=wrap;html=1;fillColor=#8b5cf6;strokeColor=none;fontSize=28;fontColor=#ffffff;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1500" y="250" width="70" height="70" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="s4Icon" value="⚙️" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=80;" vertex="1" parent="1">
+          <mxGeometry x="1450" y="360" width="180" height="100" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="s4Title" value="Verify with&#xa;Provider" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;fontStyle=1;fontColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="1430" y="480" width="220" height="70" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="s4Desc" value="PAN / GST / Aadhaar&#xa;checked against vendor" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontColor=#9ca3af;" vertex="1" parent="1">
+          <mxGeometry x="1410" y="560" width="260" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- Arrow 4→5 -->
+        <mxCell id="a4" value="" style="endArrow=classic;html=1;strokeColor=#ec4899;strokeWidth=6;endSize=12;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1750" y="450" as="sourcePoint"/>
+            <mxPoint x="1870" y="450" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- ================= STEP 5: RESULT ================= -->
+        <mxCell id="s5Circle" value="5" style="ellipse;whiteSpace=wrap;html=1;fillColor=#ec4899;strokeColor=none;fontSize=28;fontColor=#ffffff;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1950" y="250" width="70" height="70" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="s5Icon" value="✅" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=80;" vertex="1" parent="1">
+          <mxGeometry x="1900" y="360" width="180" height="100" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="s5Title" value="Status&#xa;Updated" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;fontStyle=1;fontColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="1880" y="480" width="220" height="70" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="s5Desc" value="VERIFIED / FAILED&#xa;written back to DB" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontColor=#9ca3af;" vertex="1" parent="1">
+          <mxGeometry x="1860" y="560" width="260" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- ================= TIMELINE BAR ================= -->
+        <mxCell id="tlBg" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1a2030;strokeColor=#2a3242;arcSize=20;" vertex="1" parent="1">
+          <mxGeometry x="80" y="720" width="2040" height="80" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="tlLabel" value="END-TO-END LATENCY" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontStyle=1;fontColor=#9ca3af;" vertex="1" parent="1">
+          <mxGeometry x="110" y="740" width="300" height="20" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="tlValue" value="~ 1.8 seconds   ·   0 LLM tokens used" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;fontStyle=1;fontColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="110" y="760" width="800" height="30" as="geometry"/>
+        </mxCell>
+
+        <!-- ================= KEY CALLOUTS ================= -->
+        <mxCell id="callout1" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1a2030;strokeColor=#4f5bd5;strokeWidth=2;arcSize=20;" vertex="1" parent="1">
+          <mxGeometry x="1700" y="720" width="420" height="80" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="callout1Text" value="Scale-ready: two Kafka topics, 18 partitions&#xa;Two independent services, one shared DB" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=14;fontColor=#e5e7eb;" vertex="1" parent="1">
+          <mxGeometry x="1700" y="720" width="420" height="80" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Merchants — KYC</title>
-<link rel="stylesheet" href="/css/merchants.css?v=3">
+<title>Customers — KYC</title>
+<link rel="stylesheet" href="/css/customers.css">
 </head>
 <body>
 
 <header class="topbar">
   <a href="/" class="brand">← Back to Chat</a>
-  <h1>Merchants</h1>
+  <h1>Customers</h1>
 
   <div class="filters">
     <button class="filter active" data-status="ALL">All</button>
@@ -19,7 +19,7 @@
     <button class="filter" data-status="FAILED">❌ Failed</button>
   </div>
 
-  <input id="search" placeholder="Search name / PAN / GSTIN / email..." autocomplete="off">
+  <input id="search" placeholder="Search name / email / ID / city..." autocomplete="off">
   <span id="count" class="count">—</span>
 </header>
 
@@ -31,10 +31,10 @@
         <th>Name</th>
         <th>Email</th>
         <th>Phone</th>
-        <th>PAN</th>
-        <th>PAN</th>
-        <th>Aadhaar</th>
-        <th>GST</th>
+        <th>ID Type</th>
+        <th>ID Number</th>
+        <th>City / State</th>
+        <th>Status</th>
         <th>Actions</th>
       </tr>
     </thead>
@@ -58,36 +58,38 @@
     return `<span class="badge badge-${cls}">${s || '—'}</span>`;
   }
 
+  function mask(v) {
+    if (!v || v.length < 4) return v || '';
+    return '****' + v.slice(-4);
+  }
+
   function escapeHtml(s) {
     return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({
       '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
     }[c]));
   }
 
-  function matchStatus(m) {
-    if (activeStatus === 'ALL') return true;
-    return m.panStatus === activeStatus
-        || m.aadhaarStatus === activeStatus
-        || m.gstStatus === activeStatus;
-  }
-
   function render(rows) {
     if (!rows.length) {
-      tbody.innerHTML = `<tr><td colspan="9" class="empty">No merchants match.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="9" class="empty">No customers match.</td></tr>`;
       return;
     }
-    tbody.innerHTML = rows.map(m => `
-      <tr data-id="${m.id}">
-        <td class="mono">${m.id}</td>
-        <td><strong>${escapeHtml(m.merchantName)}</strong></td>
-        <td>${escapeHtml(m.email)}</td>
-        <td>${escapeHtml(m.phone)}</td>
-        <td class="mono">${escapeHtml(m.pan)}</td>
-        <td>${statusBadge(m.panStatus)}</td>
-        <td>${statusBadge(m.aadhaarStatus)}</td>
-        <td>${statusBadge(m.gstStatus)}</td>
+    tbody.innerHTML = rows.map(c => `
+      <tr data-id="${c.id}">
+        <td class="mono">${c.id}</td>
+        <td><strong>${escapeHtml(c.fullName)}</strong></td>
+        <td>${escapeHtml(c.email)}</td>
+        <td>${escapeHtml(c.phone)}</td>
+        <td class="mono">${escapeHtml(c.idType)}</td>
+        <td class="mono">${escapeHtml(mask(c.idNumber))}</td>
+        <td>${escapeHtml(c.city)}<span class="muted">, ${escapeHtml(c.state)}</span></td>
+        <td>${statusBadge(c.kycStatus)}</td>
         <td>
-          <button class="btn-verify" onclick="verify(${m.id}, this)">Verify</button>
+          <button class="btn-verify"
+                  onclick="verify(${c.id}, this)"
+                  ${c.kycStatus !== 'PENDING' ? 'disabled' : ''}>
+            Verify
+          </button>
         </td>
       </tr>
     `).join('');
@@ -95,7 +97,7 @@
 
   async function load() {
     try {
-      const res = await fetch('/api/merchants');
+      const res = await fetch('/api/customers');
       allRows = await res.json();
       applyFilters();
     } catch (e) {
@@ -107,10 +109,10 @@
     btn.disabled = true;
     btn.textContent = '…';
     try {
-      const res = await fetch(`/api/merchants/${id}/verify`, { method: 'POST' });
+      const res = await fetch(`/api/customers/${id}/verify`, { method: 'POST' });
       if (!res.ok) throw new Error('HTTP ' + res.status);
       const updated = await res.json();
-      allRows = allRows.map(m => m.id === updated.id ? updated : m);
+      allRows = allRows.map(c => c.id === updated.id ? updated : c);
       applyFilters();
     } catch (e) {
       alert('Verify failed: ' + e.message);
@@ -121,15 +123,20 @@
   }
 
   function applyFilters() {
-    let rows = allRows.filter(matchStatus);
+    let rows = allRows;
+
+    if (activeStatus !== 'ALL') {
+      rows = rows.filter(c => c.kycStatus === activeStatus);
+    }
 
     const q = search.value.trim().toLowerCase();
     if (q) {
-      rows = rows.filter(m =>
-        (m.merchantName || '').toLowerCase().includes(q) ||
-        (m.pan || '').toLowerCase().includes(q) ||
-        (m.gstin || '').toLowerCase().includes(q) ||
-        (m.email || '').toLowerCase().includes(q)
+      rows = rows.filter(c =>
+        (c.fullName || '').toLowerCase().includes(q) ||
+        (c.email    || '').toLowerCase().includes(q) ||
+        (c.idNumber || '').toLowerCase().includes(q) ||
+        (c.city     || '').toLowerCase().includes(q) ||
+        (c.state    || '').toLowerCase().includes(q)
       );
     }
 

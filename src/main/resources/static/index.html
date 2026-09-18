@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Merchant KYC AI Assistant</title>
-<link rel="stylesheet" href="/css/chat.css">
+<link rel="stylesheet" href="/css/chat.css?v=4">
 </head>
 <body>
 
@@ -27,7 +27,15 @@
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
         <path d="M3 6h18M3 12h18M3 18h18"/>
       </svg>
-      View merchants
+      Merchants
+    </a>
+
+    <a class="new-chat-btn" href="/customers.html" style="text-decoration:none;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <circle cx="12" cy="8" r="4"/>
+        <path d="M4 21v-2a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v2"/>
+      </svg>
+      Customers
     </a>
 
     <a class="new-chat-btn" href="/dashboard.html" style="text-decoration:none;">
@@ -55,23 +63,19 @@
         </svg>
       </button>
       <div class="topbar-title">Merchant KYC AI Assistant</div>
-      <label class="stream-toggle" title="Stream responses token-by-token">
-        <input type="checkbox" id="streamToggle" checked>
-        <span>Stream</span>
-      </label>
-      <div class="topbar-model" id="modelLabel">gpt-oss-120b</div>
+      <div class="topbar-model" id="modelLabel">qwen2.5:7b</div>
     </div>
 
     <div class="messages" id="messages">
       <div class="messages-inner" id="messagesInner">
         <div class="empty-state" id="emptyState">
           <h2>How can I help with KYC today?</h2>
-          <p>Ask about verification status or trigger actions on merchants.</p>
+          <p>Ask about verification status, trigger actions, or generate reports.</p>
           <div class="suggestions">
             <button class="suggestion" onclick="quickSend('Give me the merchant summary')">Merchant summary</button>
             <button class="suggestion" onclick="quickSend('Give me the customer summary')">Customer summary</button>
-            <button class="suggestion" onclick="quickSend('Verify Krishna Agro Traders')">Verify a merchant by name</button>
-            <button class="suggestion" onclick="quickSend('How many customers are pending?')">Pending customers</button>
+            <button class="suggestion" onclick="quickSend('Verify Krishna Agro Traders')">Verify by name</button>
+            <button class="suggestion" onclick="quickSend('Give me the failed and pending report')">Failed / Pending report</button>
           </div>
         </div>
       </div>
@@ -80,6 +84,12 @@
     <div class="composer">
       <div class="composer-inner">
         <textarea id="msg" rows="1" placeholder="Message KYC Assistant..." autocomplete="off"></textarea>
+        <button id="mic" title="Voice input" type="button">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="9" y="2" width="6" height="12" rx="3"/>
+            <path d="M5 10a7 7 0 0 0 14 0M12 19v3"/>
+          </svg>
+        </button>
         <button id="send" title="Send">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <path d="M5 12h14M12 5l7 7-7 7"/>
@@ -100,7 +110,6 @@
   const sendBtn     = document.getElementById('send');
   const sessionLbl  = document.getElementById('sessionLabel');
   const sidebar     = document.getElementById('sidebar');
-  const streamTgl   = document.getElementById('streamToggle');
 
   let sessionId = sessionStorage.getItem('chatSessionId');
   if (!sessionId) {
@@ -112,12 +121,12 @@
   /* ---------- mobile: collapse sidebar by default + tap-outside to close ---------- */
   const isMobile = () => window.matchMedia('(max-width: 720px)').matches;
 
-  if (isMobile()) {
-    sidebar.classList.add('collapsed');
-  }
+  if (isMobile()) sidebar.classList.add('collapsed');
+
   window.addEventListener('resize', () => {
     if (!isMobile()) sidebar.classList.remove('collapsed');
   });
+
   document.addEventListener('click', e => {
     if (!isMobile()) return;
     if (sidebar.classList.contains('collapsed')) return;
@@ -132,12 +141,20 @@
       '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
     }[c]));
   }
+
   function renderMarkdown(text) {
     let html = escapeHtml(text);
     html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
     html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    // Markdown links: [text](url) → clickable <a>
+    html = html.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,
+      '<a href="$2" target="_blank" rel="noopener">$1</a>');
+    // Bare URLs: http://... → clickable <a>
+    html = html.replace(/(^|[\s(])(https?:\/\/[^\s<)]+)/g,
+      '$1<a href="$2" target="_blank" rel="noopener">$2</a>');
     return html;
   }
+
   function scrollBottom() { messagesEl.scrollTop = messagesEl.scrollHeight; }
   function hideEmpty() { if (emptyState && emptyState.parentNode) emptyState.remove(); }
 
@@ -226,9 +243,9 @@
     }
   }
 
-  /* ---------- non-streaming send ---------- */
+  /* ---------- send ---------- */
   async function sendBlocking(text) {
-    const wrap = addTyping();
+    addTyping();
     try {
       const res = await fetch('/api/chat', {
         method: 'POST',
@@ -241,7 +258,7 @@
       const data = JSON.parse(raw);
       const reply = data.response ?? '(no response)';
       const tools = data.toolsUsed ?? [];
-      const { wrap: w, bubble } = addMessage(reply, 'ai');
+      const { wrap: w } = addMessage(reply, 'ai');
       attachActions(w, text, reply, tools);
     } catch (e) {
       removeTyping();
@@ -249,57 +266,6 @@
     }
   }
 
-  /* ---------- streaming send (SSE via fetch) ---------- */
-  async function sendStreaming(text) {
-    const wrap = addTyping();
-    const wrapEl = wrap;
-    let bubble = null;
-    let accumulated = '';
-
-    try {
-      const res = await fetch('/api/chat/stream', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sessionId, message: text })
-      });
-
-      removeTyping();
-      const { wrap: w, bubble: b } = addMessage('', 'ai');
-      bubble = b;
-
-      const reader = res.body.getReader();
-      const decoder = new TextDecoder();
-      let buffer = '';
-
-      while (true) {
-        const { value, done } = await reader.read();
-        if (done) break;
-        buffer += decoder.decode(value, { stream: true });
-
-        let idx;
-        while ((idx = buffer.indexOf('\n\n')) >= 0) {
-          const frame = buffer.slice(0, idx);
-          buffer = buffer.slice(idx + 2);
-
-          for (const line of frame.split('\n')) {
-            if (line.startsWith('data:')) {
-              let chunk = line.slice(5);
-              if (chunk.startsWith(' ')) chunk = chunk.slice(1);
-              accumulated += chunk;
-              bubble.innerHTML = renderMarkdown(accumulated);
-              scrollBottom();
-            }
-          }
-        }
-      }
-      attachActions(w, text, accumulated, []);
-    } catch (e) {
-      removeTyping();
-      addMessage('Stream error: ' + e.message, 'ai');
-    }
-  }
-
-  /* ---------- send dispatcher ---------- */
   async function send(text) {
     text = (text ?? input.value).trim();
     if (!text) return;
@@ -309,11 +275,7 @@
     sendBtn.disabled = true;
 
     try {
-      if (streamTgl.checked) {
-        await sendStreaming(text);
-      } else {
-        await sendBlocking(text);
-      }
+      await sendBlocking(text);
     } finally {
       sendBtn.disabled = false;
       input.focus();
@@ -336,6 +298,73 @@
   document.addEventListener('keydown', e => {
     if (e.ctrlKey && e.key === 'k') { e.preventDefault(); newChat(); }
   });
+
+  /* ═══════════════════════════════════════════════════════
+     VOICE INPUT · Web Speech API
+     ═══════════════════════════════════════════════════════ */
+  const micBtn = document.getElementById('mic');
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+  if (!SpeechRecognition) {
+    micBtn.style.display = 'none';
+    console.warn('Speech Recognition not supported in this browser');
+  } else {
+    const recognition = new SpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = true;
+    recognition.lang = 'en-IN';
+
+    let listening = false;
+    let baseText = '';
+
+    micBtn.addEventListener('click', () => {
+      if (listening) {
+        recognition.stop();
+      } else {
+        baseText = input.value ? input.value.trim() + ' ' : '';
+        try {
+          recognition.start();
+        } catch (e) {
+          console.warn('recognition.start failed', e);
+        }
+      }
+    });
+
+    recognition.onstart = () => {
+      listening = true;
+      micBtn.classList.add('listening');
+      micBtn.title = 'Listening… click to stop';
+    };
+
+    recognition.onresult = (event) => {
+      let interim = '';
+      let final = '';
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const transcript = event.results[i][0].transcript;
+        if (event.results[i].isFinal) final += transcript;
+        else interim += transcript;
+      }
+      input.value = baseText + (final || interim);
+      input.style.height = 'auto';
+      input.style.height = Math.min(input.scrollHeight, 200) + 'px';
+    };
+
+    recognition.onend = () => {
+      listening = false;
+      micBtn.classList.remove('listening');
+      micBtn.title = 'Voice input';
+      input.focus();
+    };
+
+    recognition.onerror = (event) => {
+      console.warn('Speech recognition error:', event.error);
+      listening = false;
+      micBtn.classList.remove('listening');
+      if (event.error === 'not-allowed') {
+        alert('Microphone permission denied. Please allow mic access and try again.');
+      }
+    };
+  }
 
   input.focus();
 </script>

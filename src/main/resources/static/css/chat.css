@@ -785,3 +785,98 @@ button, textarea, input { font: inherit; color: inherit; }
   .empty-state h2 { font-size: 20px; }
   .bubble { font-size: 14.5px; }
 }
+
+.chat-link {
+    display: inline-block;
+    padding: 6px 14px;
+    margin-top: 6px;
+    background: linear-gradient(135deg, #14b8a6, #4f5bd5);
+    color: #fff !important;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 13px;
+    box-shadow: 0 2px 8px rgba(79, 91, 213, 0.3);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.chat-link:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(79, 91, 213, 0.45);
+}
+
+/* Links inside AI bubbles — styled as buttons */
+.bubble a {
+    display: inline-block;
+    padding: 8px 16px;
+    margin-top: 8px;
+    background: linear-gradient(135deg, #14b8a6, #4f5bd5);
+    color: #fff !important;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 13px;
+    box-shadow: 0 2px 8px rgba(79, 91, 213, 0.3);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.bubble a:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(79, 91, 213, 0.45);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   MIC BUTTON
+   ═══════════════════════════════════════════════════════════ */
+#mic {
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--border, #e3e6ef);
+    border-radius: 10px;
+    background: #fff;
+    color: var(--text-muted, #5b6178);
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    transition: background 0.15s, color 0.15s, transform 0.15s, box-shadow 0.15s;
+}
+
+#mic:hover {
+    background: #f7f8fc;
+    color: var(--text, #1a1d2e);
+    transform: translateY(-1px);
+}
+
+#mic.listening {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: #fff;
+    border-color: transparent;
+    box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.15);
+    animation: micPulse 1.2s ease-in-out infinite;
+}
+
+@keyframes micPulse {
+    0%, 100% { box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.15); }
+    50%      { box-shadow: 0 0 0 8px rgba(239, 68, 68, 0.05); }
+}
+
+/* Links inside AI bubbles — styled as buttons */
+.bubble a {
+    display: inline-block;
+    padding: 8px 16px;
+    margin-top: 8px;
+    background: linear-gradient(135deg, #14b8a6, #4f5bd5);
+    color: #fff !important;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 13px;
+    box-shadow: 0 2px 8px rgba(79, 91, 213, 0.3);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.bubble a:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(79, 91, 213, 0.45);
+}

@@ -6,7 +6,7 @@ spring:
     name: merchant-kyc-ai
 
   datasource:
-    url: jdbc:h2:file:./data/kycdb
+    url: jdbc:h2:file:D:/sayan/java_projects/merchant-kyc-ai-spring-boot/data/kycdb;AUTO_SERVER=TRUE
     driver-class-name: org.h2.Driver
     username: sa
     password:
@@ -23,13 +23,27 @@ spring:
         web-allow-others: true
 
   ai:
-    openai:
-      api-key: ${GROQ_API_KEY}
-      base-url: https://api.cerebras.ai
+    ollama:
+      base-url: http://localhost:11434
       chat:
         options:
-          model: gpt-oss-120b
+          model: qwen2.5:7b
           temperature: 0.1
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "com.isg.kyc.event"
+        spring.json.use.type.headers: false
+
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
 
 management:
   endpoints:
@@ -49,6 +63,10 @@ kyc:
       base-url: ${GST_KYC_BASE_URL:https://sandbox.example.com/gst}
       api-key: ${GST_KYC_API_KEY:}
 
+  reports:
+    filename-prefix: kyc-report
+    max-rows-per-sheet: 10000
+
 agent:
   enabled: true
-  auto-verify-cron: "0 */15 * * * *"
+  auto-verify-cron: "*/10 * * * * *"

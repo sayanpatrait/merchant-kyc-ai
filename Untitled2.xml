@@ -1,0 +1,108 @@
+<mxfile host="app.diagrams.net" modified="2026-09-17T00:00:00.000Z" agent="Claude" version="22.0.0">
+  <diagram id="hero-cards" name="Cinematic Flow">
+    <mxGraphModel dx="1600" dy="900" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="900" math="0" shadow="0" background="#0a0e1a">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- Title -->
+        <mxCell id="hTitle" value="How it works" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=48;fontStyle=1;fontColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="400" y="60" width="800" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="hSub" value="Click. Upload. Verified." style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=22;fontColor=#8b95b5;" vertex="1" parent="1">
+          <mxGeometry x="400" y="120" width="800" height="40" as="geometry"/>
+        </mxCell>
+
+        <!-- Card 1 -->
+        <mxCell id="c1" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1a2030;strokeColor=#14b8a6;strokeWidth=2;arcSize=15;shadow=1;glass=0;" vertex="1" parent="1">
+          <mxGeometry x="100" y="250" width="300" height="400" as="geometry"/>
+        </mxCell>
+        <mxCell id="c1Icon" value="📤" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=90;" vertex="1" parent="1">
+          <mxGeometry x="150" y="290" width="200" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="c1Title" value="Upload" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=32;fontStyle=1;fontColor=#14b8a6;" vertex="1" parent="1">
+          <mxGeometry x="150" y="430" width="200" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="c1Body" value="User submits&#xa;PAN / GST / Aadhaar&#xa;via API or UI" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontColor=#c5cbe0;lineHeight=1.5;" vertex="1" parent="1">
+          <mxGeometry x="130" y="490" width="240" height="130" as="geometry"/>
+        </mxCell>
+
+        <!-- Arrow 1 → 2 -->
+        <mxCell id="a1c" value="" style="endArrow=classic;html=1;strokeColor=#4f5bd5;strokeWidth=5;endSize=14;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="420" y="450" as="sourcePoint"/>
+            <mxPoint x="500" y="450" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Card 2 -->
+        <mxCell id="c2" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1a2030;strokeColor=#f59e0b;strokeWidth=2;arcSize=15;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="520" y="250" width="300" height="400" as="geometry"/>
+        </mxCell>
+        <mxCell id="c2Icon" value="📨" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=90;" vertex="1" parent="1">
+          <mxGeometry x="570" y="290" width="200" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="c2Title" value="Stream" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=32;fontStyle=1;fontColor=#f59e0b;" vertex="1" parent="1">
+          <mxGeometry x="570" y="430" width="200" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="c2Body" value="Event published&#xa;to Kafka topic&#xa;durable &amp; replayable" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontColor=#c5cbe0;lineHeight=1.5;" vertex="1" parent="1">
+          <mxGeometry x="550" y="490" width="240" height="130" as="geometry"/>
+        </mxCell>
+
+        <!-- Arrow 2 → 3 -->
+        <mxCell id="a2c" value="" style="endArrow=classic;html=1;strokeColor=#8b5cf6;strokeWidth=5;endSize=14;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="840" y="450" as="sourcePoint"/>
+            <mxPoint x="920" y="450" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Card 3 -->
+        <mxCell id="c3" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1a2030;strokeColor=#8b5cf6;strokeWidth=2;arcSize=15;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="940" y="250" width="300" height="400" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3Icon" value="⚙️" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=90;" vertex="1" parent="1">
+          <mxGeometry x="990" y="290" width="200" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3Title" value="Verify" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=32;fontStyle=1;fontColor=#8b5cf6;" vertex="1" parent="1">
+          <mxGeometry x="990" y="430" width="200" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="c3Body" value="Provider checks&#xa;PAN / GST / Aadhaar&#xa;in real time" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontColor=#c5cbe0;lineHeight=1.5;" vertex="1" parent="1">
+          <mxGeometry x="970" y="490" width="240" height="130" as="geometry"/>
+        </mxCell>
+
+        <!-- Arrow 3 → 4 -->
+        <mxCell id="a3c" value="" style="endArrow=classic;html=1;strokeColor=#10b981;strokeWidth=5;endSize=14;" edge="1" parent="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1260" y="450" as="sourcePoint"/>
+            <mxPoint x="1340" y="450" as="targetPoint"/>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- Card 4 -->
+        <mxCell id="c4" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1a2030;strokeColor=#10b981;strokeWidth=2;arcSize=15;shadow=1;" vertex="1" parent="1">
+          <mxGeometry x="1360" y="250" width="300" height="400" as="geometry"/>
+        </mxCell>
+        <mxCell id="c4Icon" value="✅" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=90;" vertex="1" parent="1">
+          <mxGeometry x="1410" y="290" width="200" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="c4Title" value="Resolved" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=32;fontStyle=1;fontColor=#10b981;" vertex="1" parent="1">
+          <mxGeometry x="1410" y="430" width="200" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="c4Body" value="Status written&#xa;to database&#xa;live on dashboard" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontColor=#c5cbe0;lineHeight=1.5;" vertex="1" parent="1">
+          <mxGeometry x="1390" y="490" width="240" height="130" as="geometry"/>
+        </mxCell>
+
+        <!-- Bottom banner -->
+        <mxCell id="banner" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1a2030;strokeColor=#4f5bd5;strokeWidth=2;arcSize=20;" vertex="1" parent="1">
+          <mxGeometry x="100" y="720" width="1560" height="90" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="bannerText" value="✦   Zero LLM tokens in the verification path   ✦   Sub-2 second end-to-end   ✦   Full audit trail on every action" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=18;fontStyle=1;fontColor=#ffffff;" vertex="1" parent="1">
+          <mxGeometry x="100" y="720" width="1560" height="90" as="geometry"/>
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

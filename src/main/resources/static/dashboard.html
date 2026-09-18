@@ -3,170 +3,505 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Ops Dashboard — KYC</title>
-<link rel="stylesheet" href="/css/dashboard.css">
+<title>KYC Operations · Dashboard</title>
+<link rel="stylesheet" href="/css/dashboard.css?v=9">
 </head>
 <body>
 
-<header class="header">
-  <div class="brand">
-    <span class="brand-logo">K</span>
-    <span>KYC Ops Dashboard</span>
+<!-- ═══════════════════════════════════════════════════════════
+     ICON RAIL · left
+     ═══════════════════════════════════════════════════════════ -->
+<aside class="rail">
+  <div class="rail-logo">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+      <path d="M2 17l10 5 10-5"/>
+      <path d="M2 12l10 5 10-5"/>
+    </svg>
   </div>
-  <div class="actions">
-    <a href="/" class="btn">💬 Chat</a>
-    <a href="/merchants.html" class="btn">📋 Merchants</a>
-    <span class="live"><span class="dot"></span> Live</span>
+
+  <nav class="rail-nav">
+    <a href="/dashboard.html" class="rail-btn rail-btn-active" title="Dashboard">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+        <polyline points="9 22 9 12 15 12 15 22"/>
+      </svg>
+    </a>
+    <a href="/" class="rail-btn" title="Chat">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+      </svg>
+    </a>
+    <a href="/merchants.html" class="rail-btn" title="Merchants">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 21h18M5 21V7l7-4 7 4v14M9 9h.01M9 13h.01M9 17h.01M15 9h.01M15 13h.01M15 17h.01"/>
+      </svg>
+    </a>
+    <a href="/customers.html" class="rail-btn" title="Customers">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+        <circle cx="12" cy="7" r="4"/>
+      </svg>
+    </a>
+    <a href="/api/reports/failed-pending.xlsx" class="rail-btn" title="Export">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+        <polyline points="7 10 12 15 17 10"/>
+        <line x1="12" y1="15" x2="12" y2="3"/>
+      </svg>
+    </a>
+  </nav>
+
+  <div class="rail-bottom">
+    <button class="rail-btn" title="Settings">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="3"/>
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+      </svg>
+    </button>
   </div>
-</header>
+</aside>
 
-<main>
-  <section class="kpis">
-    <div class="kpi">
-      <div class="kpi-label">Merchants</div>
-      <div class="kpi-value" id="m-total">—</div>
-      <div class="kpi-sub" id="m-sub">verified 0 · pending 0 · failed 0</div>
-    </div>
-    <div class="kpi">
-      <div class="kpi-label">Customers</div>
-      <div class="kpi-value" id="c-total">—</div>
-      <div class="kpi-sub" id="c-sub">verified 0 · pending 0 · failed 0</div>
-    </div>
-    <div class="kpi">
-      <div class="kpi-label">Verified checks</div>
-      <div class="kpi-value" id="v-total">—</div>
-      <div class="kpi-sub">across merchants & customers</div>
-    </div>
-    <div class="kpi">
-      <div class="kpi-label">Feedback events</div>
-      <div class="kpi-value" id="f-total">—</div>
-      <div class="kpi-sub">user ratings captured</div>
-    </div>
-  </section>
+<!-- ═══════════════════════════════════════════════════════════
+     MAIN APP
+     ═══════════════════════════════════════════════════════════ -->
+<div class="app">
 
-  <section class="grid">
-    <div class="panel">
-      <div class="panel-title">Verification trend</div>
-      <canvas id="spark" height="120"></canvas>
+  <!-- Top bar -->
+  <header class="topbar">
+    <div class="topbar-title">Dashboard</div>
+    <div class="topbar-live">
+      <span class="live-dot"></span>
+      <span>LIVE</span>
     </div>
-    <div class="panel panel-activity">
-      <div class="panel-title">
-        Live activity
-        <span class="badge-count" id="event-count">0</span>
+    <div class="topbar-search">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <input type="text" placeholder="Search merchants, customers..." id="search" />
+    </div>
+    <div class="topbar-clock" id="clock">--:--:--</div>
+  </header>
+
+  <!-- Three-column content grid -->
+  <div class="content">
+
+    <!-- ═════════ LEFT PANEL ═════════ -->
+    <div class="col-left">
+
+      <!-- Merchants card -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-head-left">
+            <span class="card-icon card-icon-teal">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 21h18M5 21V7l7-4 7 4v14M9 9h.01M9 13h.01M9 17h.01M15 9h.01M15 13h.01M15 17h.01"/>
+              </svg>
+            </span>
+            <span class="card-title">Merchants</span>
+          </div>
+          <span class="card-badge" id="m-total">0</span>
+        </div>
+        <div class="breakdown">
+          <div class="bd-row">
+            <span class="bd-indicator bd-ok"></span>
+            <span class="bd-name">Verified</span>
+            <span class="bd-num" id="m-verified">0</span>
+          </div>
+          <div class="bd-row">
+            <span class="bd-indicator bd-warn"></span>
+            <span class="bd-name">Pending</span>
+            <span class="bd-num" id="m-pending">0</span>
+          </div>
+          <div class="bd-row">
+            <span class="bd-indicator bd-fail"></span>
+            <span class="bd-name">Failed</span>
+            <span class="bd-num" id="m-failed">0</span>
+          </div>
+        </div>
       </div>
-      <ul id="activity" class="activity"></ul>
+
+      <!-- Customers card -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-head-left">
+            <span class="card-icon card-icon-indigo">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
+            </span>
+            <span class="card-title">Customers</span>
+          </div>
+          <span class="card-badge" id="c-total">0</span>
+        </div>
+        <div class="breakdown">
+          <div class="bd-row">
+            <span class="bd-indicator bd-ok"></span>
+            <span class="bd-name">Verified</span>
+            <span class="bd-num" id="c-verified">0</span>
+          </div>
+          <div class="bd-row">
+            <span class="bd-indicator bd-warn"></span>
+            <span class="bd-name">Pending</span>
+            <span class="bd-num" id="c-pending">0</span>
+          </div>
+          <div class="bd-row">
+            <span class="bd-indicator bd-fail"></span>
+            <span class="bd-name">Failed</span>
+            <span class="bd-num" id="c-failed">0</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- System status -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-head-left">
+            <span class="card-icon card-icon-lime">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                <polyline points="22 4 12 14.01 9 11.01"/>
+              </svg>
+            </span>
+            <span class="card-title">System status</span>
+          </div>
+        </div>
+        <div class="status-list">
+          <div class="status-item">
+            <span class="status-dot status-dot-ok"></span>
+            <span class="status-label">Kafka consumer</span>
+            <span class="status-value">active</span>
+          </div>
+          <div class="status-item">
+            <span class="status-dot status-dot-ok"></span>
+            <span class="status-label">Provider API</span>
+            <span class="status-value">ok</span>
+          </div>
+          <div class="status-item">
+            <span class="status-dot status-dot-ok"></span>
+            <span class="status-label">Database</span>
+            <span class="status-value">connected</span>
+          </div>
+          <div class="status-item">
+            <span class="status-dot status-dot-ok"></span>
+            <span class="status-label">Agent scheduler</span>
+            <span class="status-value">every 10s</span>
+          </div>
+        </div>
+      </div>
+
     </div>
-  </section>
-</main>
+
+    <!-- ═════════ CENTER PANEL ═════════ -->
+    <div class="col-center">
+
+      <!-- Success rate -->
+      <div class="card card-gauge">
+        <div class="card-head">
+          <div class="card-head-left">
+            <span class="card-icon card-icon-lime">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M12 6v6l4 2"/>
+              </svg>
+            </span>
+            <span class="card-title">Success rate</span>
+          </div>
+          <span class="card-badge card-badge-lime" id="gaugeDelta">+0.0%</span>
+        </div>
+        <div class="gauge-body">
+          <div class="gauge-wrap">
+            <canvas id="gaugeChart" width="220" height="220"></canvas>
+            <div class="gauge-center">
+              <div class="gauge-value" id="gaugeValue">--.-</div>
+              <div class="gauge-unit">%</div>
+            </div>
+          </div>
+          <div class="gauge-readout">
+            <div class="readout-line">
+              <span class="readout-label">
+                <span class="dot dot-ok"></span>Passed
+              </span>
+              <span class="readout-value readout-ok" id="g-verified">0</span>
+            </div>
+            <div class="readout-line">
+              <span class="readout-label">
+                <span class="dot dot-fail"></span>Failed
+              </span>
+              <span class="readout-value readout-fail" id="g-failed">0</span>
+            </div>
+            <div class="readout-line">
+              <span class="readout-label">
+                <span class="dot dot-warn"></span>Pending
+              </span>
+              <span class="readout-value readout-warn" id="g-pending">0</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Failure reasons -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-head-left">
+            <span class="card-icon card-icon-red">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                <line x1="12" y1="9" x2="12" y2="13"/>
+                <line x1="12" y1="17" x2="12.01" y2="17"/>
+              </svg>
+            </span>
+            <span class="card-title">Failure reasons</span>
+          </div>
+        </div>
+        <div class="failure-list" id="failureList"></div>
+      </div>
+
+    </div>
+
+    <!-- ═════════ RIGHT PANEL ═════════ -->
+    <div class="col-right">
+
+      <div class="card card-ticker">
+        <div class="card-head">
+          <div class="card-head-left">
+            <span class="card-icon card-icon-teal">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+              </svg>
+            </span>
+            <span class="card-title">Recent verifications</span>
+          </div>
+          <span class="card-badge" id="ticker-count">0</span>
+        </div>
+        <div class="ticker" id="ticker"></div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script>
-  /* ---------- animated KPI counters ---------- */
+  /* ─── Clock ─── */
+  function tick() {
+    document.getElementById('clock').textContent = new Date().toTimeString().slice(0, 8);
+  }
+  tick();
+  setInterval(tick, 1000);
+
+  /* ─── Utils ─── */
   function animateNumber(el, target) {
+    if (!el) return;
     const start = parseInt(el.textContent.replace(/\D/g, '')) || 0;
     const duration = 500;
     const t0 = performance.now();
     function step(t) {
       const p = Math.min(1, (t - t0) / duration);
       const eased = 1 - Math.pow(1 - p, 3);
-      el.textContent = Math.round(start + (target - start) * eased);
+      el.textContent = Math.round(start + (target - start) * eased).toLocaleString();
       if (p < 1) requestAnimationFrame(step);
     }
     requestAnimationFrame(step);
   }
 
-  /* ---------- sparkline chart ---------- */
-  let chart;
-  function initChart(labels, data) {
-    const ctx = document.getElementById('spark').getContext('2d');
-    const grad = ctx.createLinearGradient(0, 0, 0, 200);
-    grad.addColorStop(0, 'rgba(79,91,213,0.35)');
-    grad.addColorStop(1, 'rgba(20,184,166,0.02)');
+  function setText(id, v) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = typeof v === 'number' ? v.toLocaleString() : v;
+  }
 
-    chart = new Chart(ctx, {
-      type: 'line',
+  function timeAgo(iso) {
+    if (!iso) return '—';
+    const d = Math.max(0, (Date.now() - new Date(iso).getTime()) / 1000);
+    if (d < 60) return Math.floor(d) + 's';
+    if (d < 3600) return Math.floor(d / 60) + 'm';
+    if (d < 86400) return Math.floor(d / 3600) + 'h';
+    return Math.floor(d / 86400) + 'd';
+  }
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({
+      '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+    }[c]));
+  }
+
+  /* ─── Ticker ─── */
+  async function loadTicker() {
+  try {
+    const [merchants, customers, agentRuns] = await Promise.all([
+      fetch('/api/merchants').then(r => r.json()),
+      fetch('/api/customers').then(r => r.json()),
+      fetch('/api/agent/runs').then(r => r.json()).catch(() => [])
+    ]);
+
+    const items = [];
+
+    // ── Merchants
+    for (const m of merchants) {
+      const status = (m.panStatus === 'FAILED' || m.aadhaarStatus === 'FAILED' || m.gstStatus === 'FAILED')
+        ? 'FAILED'
+        : (m.panStatus === 'VERIFIED' && m.aadhaarStatus === 'VERIFIED' && m.gstStatus === 'VERIFIED')
+          ? 'VERIFIED' : 'PENDING';
+      items.push({
+        type: 'MERCHANT',
+        name: m.merchantName,
+        status,
+        time: m.createdAt
+      });
+    }
+
+    // ── Customers
+    for (const c of customers) {
+      items.push({
+        type: 'CUSTOMER',
+        name: c.fullName,
+        status: c.kycStatus,
+        time: c.createdAt
+      });
+    }
+
+    // ── Agent runs (last 5)
+    for (const r of agentRuns.slice(0, 5)) {
+      items.push({
+        type: 'AGENT',
+        name: r.taskName + (r.success ? ' · success' : ' · failed'),
+        status: r.success ? 'VERIFIED' : 'FAILED',
+        time: r.startedAt
+      });
+    }
+
+    // ── Sort by newest first
+    items.sort((a, b) => new Date(b.time) - new Date(a.time));
+    const top = items.slice(0, 14);
+
+    const ticker = document.getElementById('ticker');
+    ticker.innerHTML = top.map(i => {
+      const cls = 'trow ticker-' + i.status.toLowerCase();
+      const typeLabel = i.type === 'MERCHANT' ? 'Merchant'
+                      : i.type === 'CUSTOMER' ? 'Customer'
+                      : 'Agent';
+      const prefix = i.type === 'AGENT' ? '🤖 ' : '';
+      return `
+        <div class="${cls}">
+          <span class="tdot tdot-${i.status.toLowerCase()}"></span>
+          <span class="tname">
+            <span class="ttype">${typeLabel}</span>
+            ${prefix}${esc(i.name)}
+          </span>
+          <span class="ttime">${timeAgo(i.time)}</span>
+        </div>
+      `;
+    }).join('');
+
+    document.getElementById('ticker-count').textContent = items.length;
+  } catch (e) {
+    console.warn('ticker load failed', e);
+  }
+}
+
+  /* ─── Gauge ─── */
+  let gauge;
+  function renderGauge(rate, ok, fail, pending) {
+    const ctx = document.getElementById('gaugeChart').getContext('2d');
+    if (gauge) gauge.destroy();
+
+    gauge = new Chart(ctx, {
+      type: 'doughnut',
       data: {
-        labels,
+        labels: ['Passed', 'Failed'],
         datasets: [{
-          data,
-          borderColor: '#4f5bd5',
-          backgroundColor: grad,
-          borderWidth: 2,
-          fill: true,
-          tension: 0.4,
-          pointRadius: 0,
-          pointHoverRadius: 5
+          data: [ok, fail || 0.0001],
+          backgroundColor: ['#b4f34d', '#ff4d6d'],
+          borderWidth: 0,
+          cutout: '80%',
+          circumference: 270,
+          rotation: 225
         }]
       },
       options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: { legend: { display: false }, tooltip: { enabled: true } },
-        scales: {
-          x: { display: false },
-          y: {
-            display: true,
-            grid: { color: 'rgba(79,91,213,0.08)' },
-            ticks: { color: '#8b90a6', font: { size: 10 } },
-            beginAtZero: true
-          }
-        }
+        responsive: false,
+        plugins: { legend: { display: false }, tooltip: { enabled: false } },
+        animation: { animateRotate: true, duration: 700 }
       }
     });
+
+    const el = document.getElementById('gaugeValue');
+    const start = parseFloat(el.textContent) || 0;
+    const t0 = performance.now();
+    function step(t) {
+      const p = Math.min(1, (t - t0) / 700);
+      const eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = (start + (rate - start) * eased).toFixed(1);
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+
+    setText('g-verified', ok);
+    setText('g-failed', fail);
+    setText('g-pending', pending);
   }
 
-  /* ---------- SSE: stats (named event "stats") ---------- */
+  /* ─── Failures ─── */
+  async function loadFailures() {
+    try {
+      const data = await fetch('/api/analytics/failure-reasons').then(r => r.json());
+      const list = document.getElementById('failureList');
+
+      if (!data.reasons || data.reasons.length === 0) {
+        list.innerHTML = `<div class="empty-ok">All checks passed ✅</div>`;
+        return;
+      }
+
+      list.innerHTML = data.reasons.map(r => {
+        const pct = Math.max(2, Math.round(r.percentage));
+        return `
+          <div class="frow">
+            <span class="fname">${r.reason.replace(/_/g, ' ')}</span>
+            <span class="fbar-wrap"><span class="fbar" style="width:${pct}%"></span></span>
+            <span class="fcount">${r.count}</span>
+            <span class="fpct">${r.percentage.toFixed(1)}%</span>
+          </div>`;
+      }).join('');
+    } catch (e) {
+      console.warn('failures', e);
+    }
+  }
+
+  /* ─── SSE ─── */
   const stats = new EventSource('/api/ops/stats/stream');
   stats.addEventListener('stats', ev => {
     const s = JSON.parse(ev.data);
+
     animateNumber(document.getElementById('m-total'), s.merchants.total);
+    setText('m-verified', s.merchants.verified);
+    setText('m-pending', s.merchants.pending);
+    setText('m-failed', s.merchants.failed);
+
     animateNumber(document.getElementById('c-total'), s.customers.total);
-    animateNumber(document.getElementById('v-total'),
-      s.merchants.verified + s.customers.verified);
-    animateNumber(document.getElementById('f-total'), s.feedback);
+    setText('c-verified', s.customers.verified);
+    setText('c-pending', s.customers.pending);
+    setText('c-failed', s.customers.failed);
 
-    document.getElementById('m-sub').textContent =
-      `verified ${s.merchants.verified} · pending ${s.merchants.pending} · failed ${s.merchants.failed}`;
-    document.getElementById('c-sub').textContent =
-      `verified ${s.customers.verified} · pending ${s.customers.pending} · failed ${s.customers.failed}`;
-
-    if (!chart) {
-      const labels = s.sparkline.map((_, i) => i);
-      initChart(labels, s.sparkline);
-    } else {
-      chart.data.datasets[0].data = s.sparkline;
-      chart.update('none');
-    }
+    fetch('/api/analytics/success-rate')
+      .then(r => r.json())
+      .then(r => renderGauge(r.rate, r.verified, r.failed, r.pending))
+      .catch(() => {});
   });
 
-  /* ---------- SSE: activity (named event "event") ---------- */
-  const activity = document.getElementById('activity');
-  const eventCount = document.getElementById('event-count');
-  let count = 0;
+  /* ─── Init ─── */
+  loadTicker();
+  loadFailures();
+  fetch('/api/analytics/success-rate')
+    .then(r => r.json())
+    .then(r => renderGauge(r.rate, r.verified, r.failed, r.pending));
 
-  const events = new EventSource('/api/ops/events/stream');
-  events.addEventListener('event', ev => {
-    const e = JSON.parse(ev.data);
-    const li = document.createElement('li');
-    li.className = 'event event-' + (e.type || 'default');
-
-    const icon = { verify: '✓', create: '＋', fail: '✗' }[e.type] || '•';
-    const time = new Date(e.timestamp).toLocaleTimeString();
-
-    li.innerHTML = `
-      <span class="event-icon">${icon}</span>
-      <span class="event-msg">${e.message}</span>
-      <span class="event-time">${time}</span>
-    `;
-    activity.prepend(li);
-    while (activity.children.length > 40) activity.lastChild.remove();
-
-    count++;
-    eventCount.textContent = count;
-  });
+  setInterval(loadTicker, 5000);
+  setInterval(loadFailures, 15000);
 
   stats.onerror = () => console.warn('stats stream error');
-  events.onerror = () => console.warn('events stream error');
 </script>
 </body>
 </html>
